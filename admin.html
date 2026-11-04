@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة إدارة متجر MA | التحكم بالمنتجات والطلبات</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
+    
+    <!-- Google Fonts: Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #0f172a;
+            --success: #16a34a;
+            --danger: #e11d48;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-600: #475569;
+            --white: #ffffff;
+            --font-family: 'Cairo', sans-serif;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* القائمة الجانبية للأدمن */
+        .sidebar {
+            width: 270px;
+            background: #0f172a;
+            color: #94a3b8;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 100;
+            border-left: 1px solid #1e293b;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #fff;
+        }
+
+        .sidebar-header .icon {
+            width: 42px;
+            height: 42px;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 1.25rem 0.75rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: #1e293b;
+            color: #38bdf8;
+        }
+        .menu-item.active i {
+            color: #38bdf8;
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        .btn-view-store {
+            width: 100%;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-view-store:hover {
+            background: #1d4ed8;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-wrapper {
+            margin-right: 270px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-navbar {
+            background: #fff;
+            padding: 1rem 2.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .top-navbar h1 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.65rem 1.4rem;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .content-area {
+            padding: 2.5rem;
+            flex-grow: 1;
+        }
+
+        /* بطاقات الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .stat-card h4 {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        /* الجداول والكروت */
+        .card-box {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table td {
+            padding: 1.1rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+        .badge.success { background: #dcfce7; color: #15803d; }
+        .badge.warning { background: #fef3c7; color: #b45309; }
+        .badge.danger { background: #ffe4e6; color: #be123c; }
+
+        .btn-action {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #334155;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-action:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .btn-action.delete:hover {
+            background: var(--danger);
+            color: #fff;
+            border-color: var(--danger);
+        }
+
+        /* التبويبات */
+        .tab-section {
+            display: none;
+        }
+        .tab-section.active {
+            display: block;
+        }
+
+        /* النوافذ المنبثقة */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-body {
+            background: #fff;
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: #0f172a;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* التوست */
+        .toast-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: #0f172a;
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            display: none;
+            border-right: 4px solid var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; height: auto; position: static; }
+            .main-wrapper { margin-right: 0; }
+            body { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-box" id="toast-msg"></div>
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="logo.jpg" alt="شعار المتجر" style="width: 44px; height: 44px; object-fit: cover; border-radius: 8px;">
+            <div>
+                <h3 style="font-size:1.15rem; font-weight:800;" id="side-store-name">متجر MA</h3>
+                <span style="font-size:0.75rem; color:#38bdf8;">لوحة تحكم المدير</span>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active" onclick="switchTab('overview', this)">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>نظرة عامة وإحصائيات</span>
+            </li>
+            <li class="menu-item" onclick="switchTab('products', this)">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>تعديل المنتجات والأسعار</span>
+            </li>
+            <li class="menu-item" onclick="switchTab('orders', this)">
+                <i class="fa-solid fa-receipt"></i>
+                <span>إدارة الطلبات والمبيعات</span>
+            </li>
+            <li class="menu-item" onclick="switchTab('coupons', this)">
+                <i class="fa-solid fa-tags"></i>
+                <span>كوبونات الخصم</span>
+            </li>
+            <li class="menu-item" onclick="switchTab('settings', this)">
+                <i class="fa-solid fa-gear"></i>
+                <span>إعدادات المتجر</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <a href="index.html" class="btn-view-store">
+                <i class="fa-solid fa-store"></i> فتح واجهة المتجر للعملاء
+            </a>
+        </div>
+    </aside>
+
+    <!-- منطقة المحتوى -->
+    <main class="main-wrapper">
+        <header class="top-navbar">
+            <h1 id="page-title"><i class="fa-solid fa-chart-pie"></i> نظرة عامة وإحصائيات</h1>
+            <div style="display:flex; gap:1rem;">
+                <button class="btn-primary" onclick="openProductModal()">
+                    <i class="fa-solid fa-plus"></i> إضافة منتج جديد
+                </button>
+                <a href="index.html" class="btn-primary" style="background:#0f172a;">
+                    <i class="fa-solid fa-arrow-left"></i> المتجر الرئيسي
+                </a>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <!-- تبويب 1: نظرة عامة -->
+            <div class="tab-section active" id="tab-overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div>
+                            <h4>إجمالي المبيعات المحققة</h4>
+                            <div class="value" id="stat-revenue" style="color:#2563eb;">0.00 ر.س</div>
+                        </div>
+                        <div class="stat-icon" style="background:#eff6ff; color:#2563eb;"><i class="fa-solid fa-sack-dollar"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <h4>عدد الطلبات الناجحة</h4>
+                            <div class="value" id="stat-orders" style="color:#16a34a;">0</div>
+                        </div>
+                        <div class="stat-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fa-solid fa-cart-check"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <h4>المنتجات المعروضة</h4>
+                            <div class="value" id="stat-products" style="color:#8b5cf6;">0</div>
+                        </div>
+                        <div class="stat-icon" style="background:#f5f3ff; color:#8b5cf6;"><i class="fa-solid fa-box"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div>
+                            <h4>مخزون قارب على النفاد</h4>
+                            <div class="value" id="stat-low-stock" style="color:#ea580c;">0</div>
+                        </div>
+                        <div class="stat-icon" style="background:#fff7ed; color:#ea580c;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    </div>
+                </div>
+
+                <div class="card-box">
+                    <div class="card-header">
+                        <h3>أحدث الطلبات</h3>
+                        <button class="btn-action" onclick="switchTab('orders', document.querySelectorAll('.menu-item')[2])">عرض كل الطلبات</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>التاريخ</th>
+                                <th>اسم العميل</th>
+                                <th>المبلغ</th>
+                                <th>وسيلة الدفع</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="overview-orders-tbody">
+                            <!-- أحدث الطلبات -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- تبويب 2: إدارة المنتجات وتعديل الأسعار والمخزون -->
+            <div class="tab-section" id="tab-products">
+                <div class="card-box">
+                    <div class="card-header">
+                        <div>
+                            <h3>إدارة وتعديل المنتجات</h3>
+                            <p style="font-size:0.85rem; color:#64748b;">يمكنك تعديل أي منتج أو تغيير سعره وكميته المتوفرة بالمخزون.</p>
+                        </div>
+                        <button class="btn-primary" onclick="openProductModal()">
+                            <i class="fa-solid fa-plus"></i> إضافة منتج جديد
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>اسم المنتج</th>
+                                    <th>التصنيف</th>
+                                    <th>السعر الحالي</th>
+                                    <th>السعر المشطوب</th>
+                                    <th>المخزون المتوفر</th>
+                                    <th>حالة المخزون</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-tbody">
+                                <!-- قائمة المنتجات -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب 3: إدارة الطلبات وفواتير العملاء -->
+            <div class="tab-section" id="tab-orders">
+                <div class="card-box">
+                    <div class="card-header">
+                        <div>
+                            <h3>سجل فواتير وطلبات العملاء</h3>
+                            <p style="font-size:0.85rem; color:#64748b;">متابعة الأكواد الرقمية التي تم تسليمها وتحديث حالة الطلبات.</p>
+                        </div>
+                        <button class="btn-action" onclick="exportOrdersCSV()">
+                            <i class="fa-solid fa-file-excel"></i> تصدير الطلبات Excel/CSV
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>رقم الطلب</th>
+                                    <th>التاريخ</th>
+                                    <th>العميل</th>
+                                    <th>الأكواد والاشتراكات المسلّمة</th>
+                                    <th>المبلغ</th>
+                                    <th>الدفع</th>
+                                    <th>حالة الطلب</th>
+                                    <th>حذف</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-tbody">
+                                <!-- قائمة الطلبات -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب 4: كوبونات الخصم -->
+            <div class="tab-section" id="tab-coupons">
+                <div style="display:grid; grid-template-columns: 1fr 1.6fr; gap:1.5rem;">
+                    <div class="card-box">
+                        <div class="card-header">
+                            <h3>إنشاء كود خصم جديد</h3>
+                        </div>
+                        <form onsubmit="saveCoupon(event)" style="padding:1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label">كود الخصم (مثال: MA15)</label>
+                                <input type="text" id="new-code" class="form-input" style="text-transform:uppercase;" placeholder="MA15" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">نسبة الخصم المئوية (%)</label>
+                                <input type="number" id="new-percent" class="form-input" placeholder="15" min="1" max="95" required>
+                            </div>
+                            <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">حفظ وتفعيل الكود</button>
+                        </form>
+                    </div>
+
+                    <div class="card-box">
+                        <div class="card-header">
+                            <h3>الكوبونات المفعلة</h3>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>الكود</th>
+                                    <th>النسبة</th>
+                                    <th>الحالة</th>
+                                    <th>إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coupons-tbody">
+                                <!-- الكوبونات -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب 5: إعدادات المتجر -->
+            <div class="tab-section" id="tab-settings">
+                <div class="card-box" style="max-width:650px;">
+                    <div class="card-header">
+                        <h3>إعدادات المتجر العامة</h3>
+                    </div>
+                    <form onsubmit="saveSettings(event)" style="padding:1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">اسم المتجر</label>
+                            <input type="text" id="set-name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رقم واتساب خدمة العملاء (مع المفتاح الدولي)</label>
+                            <input type="text" id="set-wa" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">الرمز السري للدخول للأدمن (Admin PIN)</label>
+                            <input type="text" id="set-pin" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn-primary" style="padding:0.75rem 2rem;">
+                            <i class="fa-solid fa-floppy-disk"></i> حفظ الإعدادات
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- نافذة إضافة / تعديل منتج -->
+    <div class="modal" id="prod-modal">
+        <div class="modal-body">
+            <h3 id="prod-modal-title" style="font-size:1.3rem; font-weight:800; margin-bottom:1.5rem;">إضافة منتج جديد</h3>
+            <form onsubmit="saveProduct(event)">
+                <input type="hidden" id="edit-id">
+
+                <div class="form-group">
+                    <label class="form-label">اسم المنتج أو الاشتراك *</label>
+                    <input type="text" id="edit-title" class="form-input" placeholder="اشتراك نتفلكس 4K شهر" required>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label class="form-label">التصنيف *</label>
+                        <select id="edit-cat" class="form-input" required>
+                            <option value="entertainment">منصات ترفيه</option>
+                            <option value="gaming">بطاقات ألعاب</option>
+                            <option value="software">برامج وإنتاجية</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">نوع المنتج (شارة)</label>
+                        <input type="text" id="edit-type" class="form-input" placeholder="اشتراك بريميوم">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label class="form-label">السعر الحالي (ر.س) *</label>
+                        <input type="number" step="0.5" id="edit-price" class="form-input" placeholder="18.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">السعر السابق (شطب)</label>
+                        <input type="number" step="0.5" id="edit-oldprice" class="form-input" placeholder="35.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الكمية بالمخزون *</label>
+                        <input type="number" id="edit-stock" class="form-input" placeholder="50" min="0" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                    <div class="form-group">
+                        <label class="form-label">أيقونة FontAwesome</label>
+                        <input type="text" id="edit-icon" class="form-input" placeholder="fa-brands fa-netflix" value="fa-solid fa-box">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">لون الكرت</label>
+                        <input type="color" id="edit-color" class="form-input" style="height:44px; padding:2px;" value="#1e40af">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">مميزات المنتج (افصل بفاصلة ,)</label>
+                    <input type="text" id="edit-features" class="form-input" placeholder="جودة 4K UHD, تسليم فوري">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">قالب كود التفعيل التلقائي</label>
+                    <input type="text" id="edit-code" class="form-input" value="MA-{RAND4}-{RAND4}-SA">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.5rem;">
+                    <button type="button" class="btn-action" onclick="closeModal('prod-modal')">إلغاء</button>
+                    <button type="submit" class="btn-primary">حفظ وتحديث المتجر</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- السكريبت التفاعلي -->
+    <script>
+        const DEFAULT_PRODS = [
+            {
+                id: 'prod-netflix-1m',
+                title: 'اشتراك نتفلكس 4K Ultra HD (شهر)',
+                category: 'entertainment',
+                price: 18.00,
+                oldPrice: 35.00,
+                stock: 45,
+                color: '#e50914',
+                icon: 'fa-brands fa-netflix',
+                typeLabel: 'اشتراك بريميوم',
+                features: ['جودة 4K UHD فائقة الوضوح', 'شاشة خاصة بملف مشفر برمز PIN', 'تسليم آلي فوري للحساب'],
+                codeTemplate: 'NETFLIX-ACC: user_{RAND}@fastmail.com | Pass: MA_{RAND}26 | Screen 2'
+            },
+            {
+                id: 'prod-psn-sa-10',
+                title: 'بطاقة بلايستيشن ستور سعودي $10',
+                category: 'gaming',
+                price: 41.50,
+                oldPrice: 48.00,
+                stock: 30,
+                color: '#003791',
+                icon: 'fa-brands fa-playstation',
+                typeLabel: 'بطاقة شحن رصيد',
+                features: ['متجر ستور سعودي رسمي', 'شحن فوري لمحفظة PSN', 'كود رقمي 12 خانة رسمي'],
+                codeTemplate: 'PSN-SA-{RAND4}-{RAND4}-{RAND4}'
+            },
+            {
+                id: 'prod-shahid-vip',
+                title: 'اشتراك شاهد VIP مع باقة الرياضة (شهر)',
+                category: 'entertainment',
+                price: 24.00,
+                oldPrice: 42.00,
+                stock: 18,
+                color: '#10b981',
+                icon: 'fa-solid fa-tv',
+                typeLabel: 'اشتراك ترفيهي',
+                features: ['متابعة دوري روشن وجميع البطولات', 'بدون أي فواصل إعلانية', 'ضمان كامل المدة دون انقطاع'],
+                codeTemplate: 'SHAHID-VIP-VOUCHER-{RAND4}-{RAND4}'
+            },
+            {
+                id: 'prod-yt-premium',
+                title: 'اشتراك يوتيوب بريميوم (3 أشهر)',
+                category: 'entertainment',
+                price: 29.00,
+                oldPrice: 65.00,
+                stock: 22,
+                color: '#ef4444',
+                icon: 'fa-brands fa-youtube',
+                typeLabel: 'اشتراك رسمي',
+                features: ['تفعيل على إيميلك الشخصي مباشرة', 'بدون إعلانات + تشغيل في الخلفية', 'يشمل YouTube Music مجاناً'],
+                codeTemplate: 'INVITE-LINK: https://youtube.com/premium/invite?token=MA_{RAND8}'
+            },
+            {
+                id: 'prod-xbox-pass',
+                title: 'اشتراك إكس بوكس جيم باس Ultimate (شهر)',
+                category: 'gaming',
+                price: 38.00,
+                oldPrice: 59.00,
+                stock: 12,
+                color: '#107c10',
+                icon: 'fa-brands fa-xbox',
+                typeLabel: 'بطاقة ألعاب',
+                features: ['أكثر من 100 لعبة للـ PC والكونسول', 'يشمل باقة EA Play كاملة', 'كود رسمي عالمي يعمل فورا'],
+                codeTemplate: 'XBOX-ULT-{RAND5}-{RAND5}-{RAND5}'
+            },
+            {
+                id: 'prod-chatgpt-plus',
+                title: 'اشتراك ChatGPT Plus (شهر)',
+                category: 'software',
+                price: 79.00,
+                oldPrice: 95.00,
+                stock: 8,
+                color: '#10a37f',
+                icon: 'fa-solid fa-robot',
+                typeLabel: 'أدوات الذكاء الاصطناعي',
+                features: ['وصول لأحدث نماذج GPT-4o المتقدمة', 'توليد صور DALL-E وسرعة قصوى', 'تفعيل رسمي بحساب مخصص'],
+                codeTemplate: 'GPT-PLUS-KEY: gpt_{RAND}@ai-premium.net | Pass: OpenMA_{RAND}'
+            }
+        ];
+
+        let prods = JSON.parse(localStorage.getItem('ma_products_db')) || DEFAULT_PRODS;
+        let orders = JSON.parse(localStorage.getItem('ma_all_orders')) || [];
+        let coupons = JSON.parse(localStorage.getItem('ma_coupons_db')) || [
+            { code: 'MA10', percent: 10, active: true },
+            { code: 'VIP20', percent: 20, active: true }
+        ];
+        let settings = JSON.parse(localStorage.getItem('ma_settings_db')) || {
+            storeName: 'متجر MA',
+            waNumber: '966500000000',
+            adminPin: '33744751'
+        };
+        if (!settings.adminPin || settings.adminPin === '1234') {
+            settings.adminPin = '33744751';
+            localStorage.setItem('ma_settings_db', JSON.stringify(settings));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+        });
+
+        function saveAll() {
+            localStorage.setItem('ma_products_db', JSON.stringify(prods));
+            localStorage.setItem('ma_all_orders', JSON.stringify(orders));
+            localStorage.setItem('ma_coupons_db', JSON.stringify(coupons));
+            localStorage.setItem('ma_settings_db', JSON.stringify(settings));
+        }
+
+        function renderAll() {
+            saveAll();
+            document.getElementById('side-store-name').innerText = settings.storeName;
+            document.getElementById('set-name').value = settings.storeName;
+            document.getElementById('set-wa').value = settings.waNumber;
+            document.getElementById('set-pin').value = settings.adminPin;
+
+            // إحصائيات
+            const rev = orders.filter(o => o.status === 'مكتمل').reduce((sum, o) => sum + (o.totalNum || 0), 0);
+            document.getElementById('stat-revenue').innerText = rev.toFixed(2) + ' ر.س';
+            document.getElementById('stat-orders').innerText = orders.length;
+            document.getElementById('stat-products').innerText = prods.length;
+            document.getElementById('stat-low-stock').innerText = prods.filter(p => p.stock <= 5).length;
+
+            // جدول المنتجات
+            document.getElementById('products-tbody').innerHTML = prods.map(p => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                            <div style="width:34px; height:34px; background:${p.color}; border-radius:6px; color:#fff; display:flex; align-items:center; justify-content:center;">
+                                <i class="${p.icon}"></i>
+                            </div>
+                            <div>
+                                <strong>${p.title}</strong>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${p.category === 'entertainment' ? 'منصات ترفيه' : p.category === 'gaming' ? 'ألعاب' : 'برامج'}</td>
+                    <td><strong>${Number(p.price).toFixed(2)} ر.س</strong></td>
+                    <td><span style="color:#94a3b8; text-decoration:line-through;">${p.oldPrice ? Number(p.oldPrice).toFixed(2) + ' ر.س' : '-'}</span></td>
+                    <td><strong style="font-size:1.1rem; color:${p.stock <= 5 ? '#e11d48' : '#0f172a'};">${p.stock}</strong> قطعة</td>
+                    <td>
+                        <span class="badge ${p.stock <= 0 ? 'danger' : p.stock <= 5 ? 'warning' : 'success'}">
+                            ${p.stock <= 0 ? 'نفدت الكمية' : p.stock <= 5 ? 'منخفض' : 'متوفر'}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:0.4rem;">
+                            <button class="btn-action" onclick="openProductModal('${p.id}')"><i class="fa-solid fa-pen"></i> تعديل</button>
+                            <button class="btn-action delete" onclick="deleteProd('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // جدول الطلبات
+            const ordersTbody = document.getElementById('orders-tbody');
+            const overviewOrdersTbody = document.getElementById('overview-orders-tbody');
+
+            if (orders.length === 0) {
+                ordersTbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:2rem; color:#94a3b8;">لا توجد أي طلبات مستلمة بعد.</td></tr>';
+                overviewOrdersTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:#94a3b8;">لا توجد طلبات بعد.</td></tr>';
+            } else {
+                ordersTbody.innerHTML = orders.map(o => `
+                    <tr>
+                        <td><strong>#${o.id}</strong></td>
+                        <td>${o.date}</td>
+                        <td>
+                            <strong>${o.customerName}</strong><br>
+                            <span style="font-size:0.75rem; color:#64748b;">${o.customerEmail}</span>
+                        </td>
+                        <td>
+                            <div style="max-height:80px; overflow-y:auto; font-size:0.8rem; background:#f8fafc; padding:0.4rem; border-radius:4px;">
+                                ${o.items.map(it => `<div>• ${it.title}: <code style="color:#2563eb;">${it.code}</code></div>`).join('')}
+                            </div>
+                        </td>
+                        <td><strong>${o.total}</strong></td>
+                        <td>${o.method}</td>
+                        <td>
+                            <select onchange="updateStatus('${o.id}', this.value)" style="padding:0.25rem 0.5rem; border-radius:4px; border:1px solid #cbd5e1; font-family:inherit;">
+                                <option value="مكتمل" ${o.status === 'مكتمل' ? 'selected' : ''}>مكتمل</option>
+                                <option value="قيد المراجعة" ${o.status === 'قيد المراجعة' ? 'selected' : ''}>قيد المراجعة</option>
+                                <option value="ملغي" ${o.status === 'ملغي' ? 'selected' : ''}>ملغي</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn-action delete" onclick="deleteOrder('${o.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                overviewOrdersTbody.innerHTML = orders.slice(0, 5).map(o => `
+                    <tr>
+                        <td><strong>#${o.id}</strong></td>
+                        <td>${o.date}</td>
+                        <td>${o.customerName}</td>
+                        <td><strong>${o.total}</strong></td>
+                        <td>${o.method}</td>
+                        <td><span class="badge ${o.status === 'مكتمل' ? 'success' : 'warning'}">${o.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            // جدول الكوبونات
+            document.getElementById('coupons-tbody').innerHTML = coupons.map(c => `
+                <tr>
+                    <td><strong>${c.code}</strong></td>
+                    <td><strong>${c.percent}%</strong></td>
+                    <td><span class="badge success">مفعل</span></td>
+                    <td><button class="btn-action delete" onclick="deleteCoupon('${c.code}')"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function switchTab(tab, el) {
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            const titles = {
+                'overview': '<i class="fa-solid fa-chart-pie"></i> نظرة عامة وإحصائيات',
+                'products': '<i class="fa-solid fa-boxes-stacked"></i> تعديل المنتجات والأسعار',
+                'orders': '<i class="fa-solid fa-receipt"></i> إدارة الطلبات والمبيعات',
+                'coupons': '<i class="fa-solid fa-tags"></i> كوبونات الخصم',
+                'settings': '<i class="fa-solid fa-gear"></i> إعدادات المتجر'
+            };
+            document.getElementById('page-title').innerHTML = titles[tab];
+        }
+
+        function openProductModal(prodId = null) {
+            const modal = document.getElementById('prod-modal');
+            if (prodId) {
+                const p = prods.find(item => item.id === prodId);
+                if (p) {
+                    document.getElementById('prod-modal-title').innerText = 'تعديل بيانات المنتج';
+                    document.getElementById('edit-id').value = p.id;
+                    document.getElementById('edit-title').value = p.title;
+                    document.getElementById('edit-cat').value = p.category;
+                    document.getElementById('edit-type').value = p.typeLabel || '';
+                    document.getElementById('edit-price').value = p.price;
+                    document.getElementById('edit-oldprice').value = p.oldPrice || '';
+                    document.getElementById('edit-stock').value = p.stock;
+                    document.getElementById('edit-icon').value = p.icon || 'fa-solid fa-box';
+                    document.getElementById('edit-color').value = p.color || '#1e40af';
+                    document.getElementById('edit-features').value = (p.features || []).join(', ');
+                    document.getElementById('edit-code').value = p.codeTemplate || 'MA-{RAND4}-{RAND4}-SA';
+                }
+            } else {
+                document.getElementById('prod-modal-title').innerText = 'إضافة منتج جديد';
+                document.getElementById('edit-id').value = '';
+                document.getElementById('edit-title').value = '';
+                document.getElementById('edit-price').value = '';
+                document.getElementById('edit-oldprice').value = '';
+                document.getElementById('edit-stock').value = '50';
+                document.getElementById('edit-features').value = '';
+                document.getElementById('edit-code').value = 'MA-{RAND4}-{RAND4}-SA';
+            }
+            modal.classList.add('active');
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('edit-title').value.trim();
+            const category = document.getElementById('edit-cat').value;
+            const typeLabel = document.getElementById('edit-type').value.trim() || 'رقمي';
+            const price = parseFloat(document.getElementById('edit-price').value);
+            const oldPrice = parseFloat(document.getElementById('edit-oldprice').value) || 0;
+            const stock = parseInt(document.getElementById('edit-stock').value) || 0;
+            const icon = document.getElementById('edit-icon').value.trim() || 'fa-solid fa-box';
+            const color = document.getElementById('edit-color').value;
+            const features = document.getElementById('edit-features').value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+            const codeTemplate = document.getElementById('edit-code').value.trim();
+
+            if (id) {
+                const index = prods.findIndex(p => p.id === id);
+                if (index > -1) {
+                    prods[index] = { ...prods[index], title, category, typeLabel, price, oldPrice, stock, icon, color, features, codeTemplate };
+                    showToast("تم تحديث المنتج بنجاح ✓");
+                }
+            } else {
+                const newId = 'prod-' + Date.now();
+                prods.push({ id: newId, title, category, typeLabel, price, oldPrice, stock, icon, color, features, codeTemplate });
+                showToast("تمت إضافة المنتج بنجاح ✓");
+            }
+
+            closeModal('prod-modal');
+            renderAll();
+        }
+
+        function deleteProd(id) {
+            if (confirm("هل تريد حذف هذا المنتج؟")) {
+                prods = prods.filter(p => p.id !== id);
+                renderAll();
+                showToast("تم حذف المنتج");
+            }
+        }
+
+        function updateStatus(id, st) {
+            const o = orders.find(item => item.id === id);
+            if (o) {
+                o.status = st;
+                saveAll();
+                renderAll();
+                showToast(`تم تغيير حالة الطلب #${id} إلى: ${st}`);
+            }
+        }
+
+        function deleteOrder(id) {
+            if (confirm("هل تريد حذف هذا الطلب؟")) {
+                orders = orders.filter(o => o.id !== id);
+                renderAll();
+                showToast("تم حذف الطلب");
+            }
+        }
+
+        function exportOrdersCSV() {
+            if (orders.length === 0) {
+                alert("لا توجد طلبات لتصديرها");
+                return;
+            }
+            let csv = "Order ID,Date,Customer,Total,Status\n";
+            orders.forEach(o => {
+                csv += `"${o.id}","${o.date}","${o.customerName}","${o.total}","${o.status}"\n`;
+            });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `orders-export-${Date.now()}.csv`;
+            a.click();
+        }
+
+        function saveCoupon(e) {
+            e.preventDefault();
+            const code = document.getElementById('new-code').value.trim().toUpperCase();
+            const percent = parseInt(document.getElementById('new-percent').value);
+            coupons.push({ code, percent, active: true });
+            document.getElementById('new-code').value = '';
+            document.getElementById('new-percent').value = '';
+            renderAll();
+            showToast(`تم تفعيل الكوبون ${code}`);
+        }
+
+        function deleteCoupon(code) {
+            coupons = coupons.filter(c => c.code !== code);
+            renderAll();
+            showToast(`تم حذف الكوبون ${code}`);
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            settings.storeName = document.getElementById('set-name').value.trim();
+            settings.waNumber = document.getElementById('set-wa').value.trim();
+            settings.adminPin = document.getElementById('set-pin').value.trim();
+            renderAll();
+            showToast("تم حفظ الإعدادات بنجاح ✓");
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast-msg');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
