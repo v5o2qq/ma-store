@@ -1577,6 +1577,45 @@
             border-color: #e11d48;
         }
 
+        .btn-stock-adjust {
+            width: 26px;
+            height: 26px;
+            background: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-stock-adjust:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .btn-quick-edit {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 0.2rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .btn-quick-edit:hover {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+
         /* تبويبات الأقسام */
         .admin-tab-pane {
             display: none;
@@ -2212,31 +2251,67 @@
         </div>
     </div>
 
-    <!-- نافذة منبثقة 1: تسجيل الحساب / الدخول -->
+    <!-- نافذة منبثقة 1: تسجيل الحساب / الدخول الحقيقي المعتمد -->
     <div class="modal" id="auth-modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 460px;">
             <button class="modal-close-btn" onclick="closeModal('auth-modal')"><i class="fa-solid fa-xmark"></i></button>
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-user-shield"></i> تسجيل الدخول / حساب جديد</h3>
-                <p>سجل بياناتك لحفظ أرشيف فواتيرك وأكوادك الرقمية وتلقي إشعار فوري بعد الشراء.</p>
+            
+            <!-- أزرار التبديل بين تسجيل الدخول وحساب جديد -->
+            <div style="display:flex; border-bottom:2px solid #e2e8f0; margin-bottom:1.5rem;">
+                <button type="button" id="tab-btn-login" onclick="switchAuthTab('login')" style="flex:1; background:none; border:none; padding:0.75rem; font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; border-bottom:3px solid var(--primary); color:var(--primary);">
+                    <i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول
+                </button>
+                <button type="button" id="tab-btn-register" onclick="switchAuthTab('register')" style="flex:1; background:none; border:none; padding:0.75rem; font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; border-bottom:3px solid transparent; color:var(--gray-400);">
+                    <i class="fa-solid fa-user-plus"></i> حساب جديد
+                </button>
             </div>
-            <form onsubmit="handleAuthSubmit(event)">
+
+            <!-- نموذج 1: تسجيل الدخول للعميل المسجل مسبقاً -->
+            <form id="form-user-login" onsubmit="handleUserLogin(event)">
                 <div class="form-group">
-                    <label class="form-label">الاسم بالكامل</label>
-                    <input type="text" id="auth-name" class="form-input" placeholder="مثال: محمد العمري" required>
+                    <label class="form-label">البريد الإلكتروني *</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="name@domain.com" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">البريد الإلكتروني (لاستلام الأكواد)</label>
-                    <input type="email" id="auth-email" class="form-input" placeholder="name@domain.com" required>
+                    <label class="form-label">كلمة المرور *</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">رقم الجوال (اختياري للإشعارات)</label>
-                    <input type="tel" id="auth-phone" class="form-input" placeholder="05XXXXXXXX">
-                </div>
-                <button type="submit" class="btn-add-cart" style="padding:0.9rem;">
-                    <span>حفظ والمتابعة للتسوق</span>
+                <button type="submit" class="btn-add-cart" style="padding:0.85rem; font-size:1rem; margin-top:1rem;">
+                    <span>تسجيل الدخول إلى حسابي</span>
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
+                <div style="text-align:center; margin-top:1.2rem; font-size:0.88rem; color:var(--gray-600);">
+                    ليس لديك حساب حتى الآن؟ 
+                    <a href="javascript:void(0)" onclick="switchAuthTab('register')" style="color:var(--primary); font-weight:700; text-decoration:underline;">إنشاء حساب جديد</a>
+                </div>
+            </form>
+
+            <!-- نموذج 2: إنشاء وتسجيل حساب عميل جديد -->
+            <form id="form-user-register" onsubmit="handleUserRegister(event)" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">الاسم الكامل للعميل *</label>
+                    <input type="text" id="reg-name" class="form-input" placeholder="مثال: عبدالله محمد" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">البريد الإلكتروني (لاستلام الأكواد) *</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="customer@domain.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">رقم الجوال *</label>
+                    <input type="tel" id="reg-phone" class="form-input" placeholder="05XXXXXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور (6 خانات أو أكثر) *</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="••••••••" minlength="6" required>
+                </div>
+                <button type="submit" class="btn-add-cart" style="background:#059669; padding:0.85rem; font-size:1rem; margin-top:1rem;">
+                    <span>تأكيد وإنشاء الحساب</span>
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <div style="text-align:center; margin-top:1.2rem; font-size:0.88rem; color:var(--gray-600);">
+                    لديك حساب بالفعل؟ 
+                    <a href="javascript:void(0)" onclick="switchAuthTab('login')" style="color:var(--primary); font-weight:700; text-decoration:underline;">تسجيل الدخول</a>
+                </div>
             </form>
         </div>
     </div>
@@ -2561,6 +2636,10 @@
                     <i class="fa-solid fa-receipt"></i>
                     <span>إدارة الطلبات والمبيعات</span>
                 </li>
+                <li class="admin-nav-item" onclick="switchAdminTab('users', this)">
+                    <i class="fa-solid fa-users"></i>
+                    <span>العملاء والحسابات</span>
+                </li>
                 <li class="admin-nav-item" onclick="switchAdminTab('coupons', this)">
                     <i class="fa-solid fa-tags"></i>
                     <span>كوبونات الخصم</span>
@@ -2624,6 +2703,13 @@
                                 <div class="num" id="stat-low-stock">0</div>
                             </div>
                             <div class="stat-icon" style="background:#fff7ed; color:#ea580c;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h5>العملاء المسجلين</h5>
+                                <div class="num" id="stat-total-users">0</div>
+                            </div>
+                            <div class="stat-icon" style="background:#ecfdf5; color:#059669;"><i class="fa-solid fa-users"></i></div>
                         </div>
                     </div>
 
@@ -2715,6 +2801,39 @@
                                 </thead>
                                 <tbody id="admin-orders-table-body">
                                     <!-- حقن كل الطلبات -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تبويب إدارة حسابات العملاء والمسجلين -->
+                <div class="admin-tab-pane" id="tab-admin-users">
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <div>
+                                <h3><i class="fa-solid fa-users"></i> قاعدة بيانات حسابات العملاء المسجلين</h3>
+                                <p style="font-size:0.85rem; color:#64748b;">قائمة العملاء الذين سجلوا حساباتهم في المتجر، مع بياناتهم وعدد طلباتهم ومجموع مشترياتهم.</p>
+                            </div>
+                            <button class="btn-table-action" onclick="exportUsersCSV()">
+                                <i class="fa-solid fa-file-excel"></i> تصدير قائمة العملاء
+                            </button>
+                        </div>
+                        <div style="overflow-x:auto;">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>العميل</th>
+                                        <th>البريد الإلكتروني</th>
+                                        <th>رقم الجوال</th>
+                                        <th>تاريخ التسجيل</th>
+                                        <th>عدد الطلبات</th>
+                                        <th>إجمالي المشتريات</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-users-table-body">
+                                    <!-- سيتم حقن المستخدمين المسجلين هنا -->
                                 </tbody>
                             </table>
                         </div>
@@ -3047,6 +3166,18 @@
         let activeCategory = 'all';
         let searchQuery = '';
         let currentUser = JSON.parse(localStorage.getItem('ma_current_user')) || null;
+        let registeredUsers = JSON.parse(localStorage.getItem('ma_users_db')) || [
+            {
+                id: 'usr-101',
+                name: 'سالم الدوسري',
+                email: 'salem@example.com',
+                phone: '0551234567',
+                password: 'password123',
+                registeredAt: '2026/11/01',
+                orderCount: 2,
+                totalSpent: 128.50
+            }
+        ];
 
         // بدء التشغيل
         document.addEventListener('DOMContentLoaded', () => {
@@ -3064,6 +3195,7 @@
             localStorage.setItem('ma_settings_db', JSON.stringify(storeSettings));
             localStorage.setItem('ma_all_orders', JSON.stringify(allOrders));
             localStorage.setItem('ma_store_cart', JSON.stringify(cart));
+            localStorage.setItem('ma_users_db', JSON.stringify(registeredUsers));
         }
 
         function applyStoreSettingsToUI() {
@@ -3413,6 +3545,15 @@
                 };
                 allOrders.unshift(newOrder);
 
+                // تحديث بيانات وسجل العميل المسجل الحقيقي
+                if (currentUser) {
+                    const u = registeredUsers.find(user => user.email.toLowerCase() === currentUser.email.toLowerCase());
+                    if (u) {
+                        u.orderCount = (u.orderCount || 0) + 1;
+                        u.totalSpent = (u.totalSpent || 0) + parseFloat(finalTotal);
+                    }
+                }
+
                 // إعداد رسالة الواتساب السريعة
                 const waText = encodeURIComponent(`مرحباً ${storeSettings.storeName}، قمت بإتمام الطلب #${orderId} بمبلغ ${finalTotal} ر.س.`);
                 document.getElementById('btn-whatsapp-share').href = `https://wa.me/${storeSettings.waNumber}?text=${waText}`;
@@ -3464,6 +3605,7 @@
             renderAdminStats();
             renderAdminProductsTable();
             renderAdminOrdersTable();
+            renderAdminUsersTable();
             renderAdminCouponsTable();
         }
 
@@ -3484,6 +3626,7 @@
                 'overview': '📊 الإحصائيات ونظرة عامة',
                 'products': '📦 إدارة وتعديل المنتجات والمخزون',
                 'orders': '📑 فواتير وطلبات العملاء',
+                'users': '👥 قاعدة بيانات حسابات العملاء',
                 'coupons': '🏷️ إدارة كوبونات الخصم',
                 'settings': '⚙️ إعدادات المتجر'
             };
@@ -3496,11 +3639,14 @@
             const totalOrders = allOrders.length;
             const totalProds = products.length;
             const lowStock = products.filter(p => p.stock <= 5).length;
+            const totalUsers = registeredUsers.length;
 
             document.getElementById('stat-total-revenue').innerText = totalRev.toFixed(2) + ' ر.س';
             document.getElementById('stat-total-orders').innerText = totalOrders;
             document.getElementById('stat-total-products').innerText = totalProds;
             document.getElementById('stat-low-stock').innerText = lowStock;
+            const statUsersEl = document.getElementById('stat-total-users');
+            if (statUsersEl) statUsersEl.innerText = totalUsers;
 
             // ملء جدول أحدث الطلبات في النظرة العامة
             const recentTbody = document.getElementById('overview-recent-orders');
@@ -3548,18 +3694,32 @@
                             </div>
                         </td>
                         <td>${p.category === 'entertainment' ? 'منصات ترفيه' : p.category === 'gaming' ? 'ألعاب' : 'برامج'}</td>
-                        <td><strong>${Number(p.price).toFixed(2)} ر.س</strong></td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:0.4rem;">
+                                <strong>${Number(p.price).toFixed(2)} ر.س</strong>
+                                <button class="btn-quick-edit" onclick="quickEditPrice('${p.id}')" title="تعديل السعر سريعاً">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </div>
+                        </td>
                         <td><span style="color:#94a3b8; text-decoration:line-through;">${p.oldPrice ? Number(p.oldPrice).toFixed(2) + ' ر.س' : '-'}</span></td>
                         <td>
-                            <strong style="font-size:1.05rem; color:${p.stock <= 5 ? '#e11d48' : '#0f172a'};">${p.stock}</strong> قطعة
+                            <div style="display:flex; align-items:center; gap:0.35rem;">
+                                <button class="btn-stock-adjust" onclick="quickAdjustStock('${p.id}', -1)" title="إنقاص المخزون 1">-</button>
+                                <strong style="font-size:1.05rem; min-width:26px; text-align:center; color:${p.stock <= 5 ? '#e11d48' : '#0f172a'};">${p.stock}</strong>
+                                <button class="btn-stock-adjust" onclick="quickAdjustStock('${p.id}', 1)" title="زيادة المخزون 1">+</button>
+                                <button class="btn-quick-edit" onclick="quickSetStock('${p.id}')" title="تحديد الكمية بالضبط">
+                                    <i class="fa-solid fa-sliders"></i>
+                                </button>
+                            </div>
                         </td>
                         <td>${stockStatus}</td>
                         <td>
                             <div style="display:flex; gap:0.4rem;">
-                                <button class="btn-table-action" onclick="openProductModal('${p.id}')">
+                                <button class="btn-table-action" onclick="openProductModal('${p.id}')" title="تعديل تفاصيل المنتج بالكامل">
                                     <i class="fa-solid fa-pen-to-square"></i> تعديل
                                 </button>
-                                <button class="btn-table-action delete" onclick="deleteProduct('${p.id}')">
+                                <button class="btn-table-action delete" onclick="deleteProduct('${p.id}')" title="حذف المنتج من المتجر">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -3836,16 +3996,218 @@
             openModal('orders-modal');
         }
 
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('auth-name').value.trim();
-            const email = document.getElementById('auth-email').value.trim();
+        // ==========================================
+        // وظائف سريعة لإدارة الأسعار والمخزون
+        // ==========================================
+        function quickAdjustStock(prodId, delta) {
+            const prod = products.find(p => p.id === prodId);
+            if (!prod) return;
+            const newStock = Math.max(0, (parseInt(prod.stock) || 0) + delta);
+            prod.stock = newStock;
+            saveAllState();
+            renderAdminProductsTable();
+            renderAdminStats();
+            renderProducts();
+            showToast(`تم تعديل مخزون "${prod.title}" إلى: ${newStock} قطعة`, "success");
+        }
 
-            currentUser = { name, email };
+        function quickSetStock(prodId) {
+            const prod = products.find(p => p.id === prodId);
+            if (!prod) return;
+            const val = prompt(`أدخل كمية المخزون الجديدة لمنتج "${prod.title}":`, prod.stock);
+            if (val === null) return;
+            const num = parseInt(val);
+            if (isNaN(num) || num < 0) {
+                showToast("يرجى إدخال كمية صحيحة", "error");
+                return;
+            }
+            prod.stock = num;
+            saveAllState();
+            renderAdminProductsTable();
+            renderAdminStats();
+            renderProducts();
+            showToast(`تم تعيين كمية "${prod.title}" إلى: ${num} قطعة`, "success");
+        }
+
+        function quickEditPrice(prodId) {
+            const prod = products.find(p => p.id === prodId);
+            if (!prod) return;
+            const val = prompt(`أدخل السعر الجديد لمنتج "${prod.title}" (ر.س):`, prod.price);
+            if (val === null) return;
+            const num = parseFloat(val);
+            if (isNaN(num) || num <= 0) {
+                showToast("يرجى إدخال سعر صحيح", "error");
+                return;
+            }
+            prod.price = num;
+            saveAllState();
+            renderAdminProductsTable();
+            renderAdminStats();
+            renderProducts();
+            showToast(`تم تعيين سعر "${prod.title}" إلى: ${num.toFixed(2)} ر.س`, "success");
+        }
+
+        // ==========================================
+        // إدارة حسابات العملاء والمسجلين
+        // ==========================================
+        function renderAdminUsersTable() {
+            const tbody = document.getElementById('admin-users-table-body');
+            if (!tbody) return;
+            if (registeredUsers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:3rem; color:#94a3b8;">لا توجد أي حسابات عملاء مسجلة بعد.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = registeredUsers.map(u => `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                            <div style="width:34px; height:34px; background:#eff6ff; color:#2563eb; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800;">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div>
+                                <strong>${u.name}</strong>
+                                <div style="font-size:0.75rem; color:#64748b;">معرف: ${u.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><strong>${u.email}</strong></td>
+                    <td>${u.phone || '-'}</td>
+                    <td>${u.registeredAt || '-'}</td>
+                    <td><span class="badge-status success">${u.orderCount || 0} طلبات</span></td>
+                    <td><strong>${Number(u.totalSpent || 0).toFixed(2)} ر.س</strong></td>
+                    <td>
+                        <button class="btn-table-action delete" onclick="deleteUserAccount('${u.id}')" title="حذف حساب العميل نهائياً">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteUserAccount(userId) {
+            const user = registeredUsers.find(u => u.id === userId);
+            if (!user) return;
+            if (confirm(`هل أنت متأكد من رغبتك في حذف حساب العميل "${user.name}"؟`)) {
+                registeredUsers = registeredUsers.filter(u => u.id !== userId);
+                if (currentUser && currentUser.id === userId) {
+                    currentUser = null;
+                    localStorage.removeItem('ma_current_user');
+                    checkUserSession();
+                }
+                saveAllState();
+                renderAdminUsersTable();
+                renderAdminStats();
+                showToast("تم حذف حساب العميل من قاعدة البيانات", "error");
+            }
+        }
+
+        function exportUsersCSV() {
+            if (registeredUsers.length === 0) {
+                showToast("لا يوجد عملاء مسجلون لتصديرهم", "error");
+                return;
+            }
+            let csv = "ID,Name,Email,Phone,RegisteredAt,OrdersCount,TotalSpent\n";
+            registeredUsers.forEach(u => {
+                csv += `"${u.id}","${u.name}","${u.email}","${u.phone || ''}","${u.registeredAt || ''}",${u.orderCount || 0},${u.totalSpent || 0}\n`;
+            });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `registered-users-${Date.now()}.csv`;
+            a.click();
+            showToast("تم تصدير ملف بيانات العملاء بنجاح ✓", "success");
+        }
+
+        // ==========================================
+        // تسجيل الحساب والدخول الحقيقي
+        // ==========================================
+        function switchAuthTab(tab) {
+            const btnLogin = document.getElementById('tab-btn-login');
+            const btnReg = document.getElementById('tab-btn-register');
+            const formLogin = document.getElementById('form-user-login');
+            const formReg = document.getElementById('form-user-register');
+
+            if (tab === 'login') {
+                btnLogin.style.borderBottom = '3px solid var(--primary)';
+                btnLogin.style.color = 'var(--primary)';
+                btnReg.style.borderBottom = '3px solid transparent';
+                btnReg.style.color = 'var(--gray-400)';
+                formLogin.style.display = 'block';
+                formReg.style.display = 'none';
+            } else {
+                btnReg.style.borderBottom = '3px solid #059669';
+                btnReg.style.color = '#059669';
+                btnLogin.style.borderBottom = '3px solid transparent';
+                btnLogin.style.color = 'var(--gray-400)';
+                formLogin.style.display = 'none';
+                formReg.style.display = 'block';
+            }
+        }
+
+        function handleUserRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const password = document.getElementById('reg-password').value;
+
+            if (registeredUsers.some(u => u.email.toLowerCase() === email)) {
+                showToast("هذا البريد الإلكتروني مسجل مسبقاً! يرجى تسجيل الدخول", "error");
+                switchAuthTab('login');
+                document.getElementById('login-email').value = email;
+                return;
+            }
+
+            const newUser = {
+                id: 'usr-' + Date.now(),
+                name,
+                email,
+                phone,
+                password,
+                registeredAt: new Date().toLocaleDateString('ar-SA'),
+                orderCount: 0,
+                totalSpent: 0
+            };
+
+            registeredUsers.push(newUser);
+            currentUser = { id: newUser.id, name: newUser.name, email: newUser.email, phone: newUser.phone };
+            localStorage.setItem('ma_current_user', JSON.stringify(currentUser));
+            saveAllState();
+
+            checkUserSession();
+            closeModal('auth-modal');
+            showToast(`أهلاً بك يا ${name}! تم إنشاء حسابك وحفظ بياناتك بنجاح ✓`, 'success');
+
+            if (cart.length > 0) {
+                openCheckoutModal();
+            }
+        }
+
+        function handleUserLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            const user = registeredUsers.find(u => u.email.toLowerCase() === email);
+            if (!user) {
+                showToast("البريد الإلكتروني غير مسجل! تفضل بإنشاء حساب جديد", "error");
+                switchAuthTab('register');
+                document.getElementById('reg-email').value = email;
+                return;
+            }
+
+            if (user.password !== password) {
+                showToast("كلمة المرور غير صحيحة، يرجى التحقق وإعادة المحاولة", "error");
+                return;
+            }
+
+            currentUser = { id: user.id, name: user.name, email: user.email, phone: user.phone };
             localStorage.setItem('ma_current_user', JSON.stringify(currentUser));
             checkUserSession();
             closeModal('auth-modal');
-            showToast(`أهلاً بك مجدداً يا ${name} 👋`, 'success');
+            showToast(`أهلاً بعودتك يا ${user.name} 👋`, 'success');
 
             if (cart.length > 0) {
                 openCheckoutModal();
@@ -3966,19 +4328,16 @@
         }
 
         function toggleMobileNav() {
-            const links = document.querySelector('.nav-links');
-            if (links.style.display === 'flex') {
-                links.style.display = 'none';
-            } else {
-                links.style.display = 'flex';
-                links.style.flexDirection = 'column';
-                links.style.position = 'absolute';
-                links.style.top = '75px';
-                links.style.left = '0';
-                links.style.width = '100%';
-                links.style.background = '#fff';
-                links.style.padding = '1.5rem';
-                links.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+            const links = document.getElementById('main-nav-links') || document.querySelector('.nav-links');
+            if (links) {
+                links.classList.toggle('active-mobile');
+            }
+        }
+
+        function closeMobileNav() {
+            const links = document.getElementById('main-nav-links') || document.querySelector('.nav-links');
+            if (links) {
+                links.classList.remove('active-mobile');
             }
         }
 
