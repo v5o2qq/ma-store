@@ -2900,7 +2900,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">الرمز السري للدخول للوحة التحكم (Admin PIN)</label>
-                                <input type="text" id="setting-store-pin" class="form-input" value="33744751" required>
+                                <input type="text" id="setting-store-pin" class="form-input" value="11533" required>
                             </div>
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2rem;">
                                 <button type="submit" class="btn-add-cart" style="width:auto; padding:0.75rem 2rem;">
@@ -3147,7 +3147,7 @@
         const DEFAULT_SETTINGS = {
             storeName: 'متجر MA',
             waNumber: '966500000000',
-            adminPin: '33744751'
+            adminPin: '11533'
         };
 
         // ==========================================
@@ -3156,8 +3156,8 @@
         let products = JSON.parse(localStorage.getItem('ma_products_db')) || DEFAULT_PRODUCTS;
         let coupons = JSON.parse(localStorage.getItem('ma_coupons_db')) || DEFAULT_COUPONS;
         let storeSettings = JSON.parse(localStorage.getItem('ma_settings_db')) || DEFAULT_SETTINGS;
-        if (!storeSettings.adminPin || storeSettings.adminPin === '1234') {
-            storeSettings.adminPin = '33744751';
+        if (!storeSettings.adminPin || storeSettings.adminPin === '1234' || storeSettings.adminPin === '33744751') {
+            storeSettings.adminPin = '11533';
             localStorage.setItem('ma_settings_db', JSON.stringify(storeSettings));
         }
         let allOrders = JSON.parse(localStorage.getItem('ma_all_orders')) || [];

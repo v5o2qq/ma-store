@@ -908,10 +908,10 @@
         let settings = JSON.parse(localStorage.getItem('ma_settings_db')) || {
             storeName: 'متجر MA',
             waNumber: '966500000000',
-            adminPin: '33744751'
+            adminPin: '11533'
         };
-        if (!settings.adminPin || settings.adminPin === '1234') {
-            settings.adminPin = '33744751';
+        if (!settings.adminPin || settings.adminPin === '1234' || settings.adminPin === '33744751') {
+            settings.adminPin = '11533';
             localStorage.setItem('ma_settings_db', JSON.stringify(settings));
         }
 
